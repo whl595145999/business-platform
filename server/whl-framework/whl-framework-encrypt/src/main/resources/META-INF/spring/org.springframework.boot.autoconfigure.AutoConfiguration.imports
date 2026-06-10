@@ -1,0 +1,3 @@
+com.whl.framework.encrypt.config.EncryptorAutoConfiguration
+com.whl.framework.encrypt.config.ApiDecryptAutoConfiguration
+

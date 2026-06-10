@@ -1,0 +1,186 @@
+package ${packageScmBiz};
+
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.whl.framework.core.exception.ServiceException;
+import com.whl.framework.core.utils.StringUtils;
+#if(!$pkIncrement)
+import com.whl.framework.mybatis.utils.IdGeneratorUtil;
+#end
+import ${packageScmApi}.command.Create${ClassName}Command;
+import ${packageScmApi}.command.Delete${ClassName}Command;
+import ${packageScmApi}.command.Update${ClassName}Command;
+import ${packageScmApi}.dto.${ClassName}Dto;
+import ${packageScmApi}.error.${scmErrorCodeClass};
+import ${packageScmApi}.facade.${ClassName}Facade;
+import ${packageScmApi}.page.ScmPageResult;
+import ${packageScmApi}.query.Get${ClassName}Query;
+import ${packageScmApi}.query.List${ClassName}OptionsQuery;
+import ${packageScmApi}.query.Page${ClassName}Query;
+import ${packageScmBiz}.domain.${scmEntityClass};
+import ${packageScmBiz}.mapper.${scmEntityClass}Mapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+#set($underscoreIdx = $tableName.indexOf('_'))
+#set($errorBiz = $tableName.substring($underscoreIdx + 1).toUpperCase())
+#set($BizKeyAttr = $businessKeyColumn.javaField.substring(0,1).toUpperCase() + $businessKeyColumn.javaField.substring(1))
+
+/**
+ * ${functionName}应用服务，实现 {@link ${ClassName}Facade}。
+ *
+#parse("vm/scm/common/java-doc-footer.vm")
+ */
+@Service
+@RequiredArgsConstructor
+public class ${ClassName}AppService implements ${ClassName}Facade {
+
+    private final ${scmEntityClass}Mapper ${className}Mapper;
+
+    /** {@inheritDoc} */
+    @Override
+    public ScmPageResult<${ClassName}Dto> page${ClassName}(Page${ClassName}Query query) {
+        LambdaQueryWrapper<${scmEntityClass}> lqw = buildQueryWrapper(query);
+        Page<${scmEntityClass}> page = ${className}Mapper.selectPage(query.build(), lqw);
+        List<${ClassName}Dto> rows = page.getRecords().stream().map(this::toDto).toList();
+        ScmPageResult<${ClassName}Dto> result = new ScmPageResult<>();
+        result.setRows(rows);
+        result.setTotal(page.getTotal());
+        return result;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public ${ClassName}Dto get${ClassName}(Get${ClassName}Query query) {
+        return toDto(requireByKey(query.getTenantId(), query.get${BizKeyAttr}()));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ${ClassName}Dto create${ClassName}(Create${ClassName}Command command) {
+        // GEN-TODO: custom validation
+        ${scmEntityClass} entity = new ${scmEntityClass}();
+#if(!$pkIncrement)
+        entity.setId(IdGeneratorUtil.nextLongId()); // GEN-TODO: confirm id strategy when pk is not AUTO_INCREMENT
+#end
+#foreach ($column in $columns)
+#if($column.insert && !($pkIncrement && $column.pk))
+        entity.set${column.javaField.substring(0,1).toUpperCase()}${column.javaField.substring(1)}(command.get${column.javaField.substring(0,1).toUpperCase()}${column.javaField.substring(1)}());
+#end
+#end
+        try {
+            ${className}Mapper.insert(entity);
+        } catch (DuplicateKeyException ex) {
+            throw new ServiceException(${scmErrorCodeClass}.${scmDomain.toUpperCase()}_${errorBiz}_CODE_EXISTS.message());
+        }
+        return toDto(entity);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ${ClassName}Dto update${ClassName}(Update${ClassName}Command command) {
+        // GEN-TODO: custom validation
+        ${scmEntityClass} entity = requireByKey(command.getTenantId(), command.get${BizKeyAttr}());
+#foreach ($column in $columns)
+#if($column.edit && $column.javaField != $businessKeyColumn.javaField)
+        entity.set${column.javaField.substring(0,1).toUpperCase()}${column.javaField.substring(1)}(command.get${column.javaField.substring(0,1).toUpperCase()}${column.javaField.substring(1)}());
+#end
+#end
+        ${className}Mapper.updateById(entity);
+        return toDto(entity);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void delete${ClassName}(Delete${ClassName}Command command) {
+#if($businessKeyColumn.javaType == 'String')
+        if (StrUtil.hasBlank(command.getTenantId(), command.get${BizKeyAttr}())) {
+#else
+        if (StrUtil.hasBlank(command.getTenantId()) || command.get${BizKeyAttr}() == null) {
+#end
+            throw new ServiceException("删除${functionName}参数不完整");
+        }
+        ${scmEntityClass} entity = requireByKey(command.getTenantId(), command.get${BizKeyAttr}());
+        ${className}Mapper.deleteById(entity.getId());
+    }
+#if($scmGenerateOptions)
+
+    /** {@inheritDoc} */
+    @Override
+    public List<${ClassName}Dto> list${ClassName}Options(List${ClassName}OptionsQuery query) {
+        return ${className}Mapper.selectList(
+            Wrappers.<${scmEntityClass}>lambdaQuery()
+                .eq(${scmEntityClass}::getTenantId, query.getTenantId())
+                .orderByAsc(${scmEntityClass}::get${BizKeyAttr})
+        ).stream().map(this::toDto).toList();
+    }
+#end
+
+    /** 按租户与业务键加载实体，不存在则抛出业务异常。 */
+    private ${scmEntityClass} requireByKey(String tenantId, ${businessKeyColumn.javaType} ${businessKeyColumn.javaField}) {
+        ${scmEntityClass} entity = findByKey(tenantId, ${businessKeyColumn.javaField});
+        if (entity == null) {
+            throw new ServiceException(${scmErrorCodeClass}.${scmDomain.toUpperCase()}_${errorBiz}_NOT_FOUND.message());
+        }
+        return entity;
+    }
+
+    /** 按租户与业务键查询实体，不存在返回 {@code null}。 */
+    private ${scmEntityClass} findByKey(String tenantId, ${businessKeyColumn.javaType} ${businessKeyColumn.javaField}) {
+        return ${className}Mapper.selectOne(
+            Wrappers.<${scmEntityClass}>lambdaQuery()
+                .eq(${scmEntityClass}::getTenantId, tenantId)
+                .eq(${scmEntityClass}::get${BizKeyAttr}, ${businessKeyColumn.javaField})
+        );
+    }
+
+    /** 根据分页查询条件构建 MyBatis-Plus {@link LambdaQueryWrapper}。 */
+    private LambdaQueryWrapper<${scmEntityClass}> buildQueryWrapper(Page${ClassName}Query query) {
+        LambdaQueryWrapper<${scmEntityClass}> lqw = Wrappers.lambdaQuery();
+        lqw.eq(${scmEntityClass}::getTenantId, query.getTenantId());
+#foreach($column in $columns)
+#if($column.query)
+#set($queryType=$column.queryType)
+#set($javaField=$column.javaField)
+#set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
+#set($mpMethod=$column.queryType.toLowerCase())
+#if($queryType != 'BETWEEN')
+#if($column.javaType == 'String')
+#set($condition='StringUtils.isNotBlank(query.get' + $AttrName + '())')
+#else
+#set($condition='query.get' + $AttrName + '() != null')
+#end
+        lqw.$mpMethod($condition, ${scmEntityClass}::get$AttrName, query.get$AttrName());
+#else
+        lqw.between(query.get${AttrName}Begin() != null && query.get${AttrName}End() != null,
+            ${scmEntityClass}::get$AttrName, query.get${AttrName}Begin(), query.get${AttrName}End());
+#end
+#end
+#end
+        lqw.orderByDesc(${scmEntityClass}::get${BizKeyAttr});
+        return lqw;
+    }
+
+    /** 实体转 {@link ${ClassName}Dto}。 */
+    private ${ClassName}Dto toDto(${scmEntityClass} entity) {
+        if (entity == null) {
+            return null;
+        }
+        ${ClassName}Dto dto = new ${ClassName}Dto();
+#foreach ($column in $columns)
+#if($column.list && !$table.isSuperColumn($column.javaField))
+        dto.set${column.javaField.substring(0,1).toUpperCase()}${column.javaField.substring(1)}(entity.get${column.javaField.substring(0,1).toUpperCase()}${column.javaField.substring(1)}());
+#end
+#end
+        return dto;
+    }
+
+}

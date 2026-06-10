@@ -1,0 +1,71 @@
+/**
+ * wot-design-uni 主题 + 全局视觉覆写
+ */
+:root,
+page {
+  --wot-color-theme: var(--bp-color-primary);
+  --wot-color-success: var(--bp-color-success);
+  --wot-color-warning: var(--bp-color-warning);
+  --wot-color-danger: var(--bp-color-danger);
+  --wot-button-primary-bg-color: var(--bp-color-primary);
+  --wot-button-medium-height: 88rpx;
+  --wot-button-medium-fs: var(--bp-font-body);
+  --wot-search-input-bg: var(--bp-bg-page);
+  --wot-search-input-radius: var(--bp-radius-md);
+  --wot-cell-title-fs: var(--bp-font-body);
+  --wot-cell-line-height: 48rpx;
+  --wot-cell-padding: var(--bp-space-md);
+  --wot-card-radius: var(--bp-radius-md);
+  --wot-card-padding: var(--bp-spacing-card);
+}
+
+/* 卡片：边框分层，去重阴影 */
+.wd-card {
+  border: 1rpx solid var(--bp-border-color) !important;
+  box-shadow: var(--bp-shadow-none) !important;
+  border-radius: var(--bp-radius-md) !important;
+  overflow: hidden;
+}
+
+.wd-card__title {
+  font-size: var(--bp-font-subhead) !important;
+  font-weight: var(--bp-font-weight-semibold) !important;
+  color: var(--bp-text-primary) !important;
+}
+
+/* 单元格组：圆角卡片感 */
+.wd-cell-group {
+  border-radius: var(--bp-radius-md) !important;
+  overflow: hidden;
+  border: 1rpx solid var(--bp-border-color);
+}
+
+.wd-cell-group__title {
+  font-size: var(--bp-font-caption) !important;
+  color: var(--bp-text-tertiary) !important;
+  padding-top: var(--bp-space-md) !important;
+}
+
+.wd-cell {
+  min-height: 104rpx;
+}
+
+/* 搜索框 */
+.wd-search {
+  background: transparent !important;
+}
+
+.wd-search__block {
+  border-radius: var(--bp-radius-md) !important;
+}
+
+/* 空状态 */
+.wd-empty__text {
+  color: var(--bp-text-tertiary) !important;
+  font-size: var(--bp-font-caption) !important;
+}
+
+/* 主按钮圆角 */
+.wd-button.is-primary {
+  border-radius: var(--bp-radius-md) !important;
+}

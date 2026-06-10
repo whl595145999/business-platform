@@ -1,0 +1,60 @@
+### OpenAPI 调用 Demo（IntelliJ / VS Code REST Client）
+### 先启动 whl-openapi-server（8081），并执行 update_openapi_client.sql
+
+@baseUrl = http://localhost:8081/openapi
+@clientId = a8f3c2e1b9d0476581920abcdef12345
+@tenantId = 000000
+
+### 1. 登录（openapi 客户端，无验证码）
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "clientId": "{{clientId}}",
+  "grantType": "password",
+  "tenantId": "{{tenantId}}",
+  "username": "admin",
+  "password": "admin123"
+}
+
+###
+@token = {{login.response.body.data.access_token}}
+@authClientId = {{login.response.body.data.client_id}}
+
+### 2. 规范样例 · 只读（adapter → Facade → biz）
+GET {{baseUrl}}/scm/demo/health
+Authorization: Bearer {{token}}
+clientid: {{authClientId}}
+
+### 3. 创建订单（写操作 · Command + idempotencyKey）
+# @name createOrder
+POST {{baseUrl}}/scm/demo/orders
+Authorization: Bearer {{token}}
+clientid: {{authClientId}}
+Content-Type: application/json
+
+{
+  "idempotencyKey": "http-demo-001",
+  "warehouseCode": "WH01",
+  "lines": [{ "skuCode": "DEMO-SKU", "qty": 2 }]
+}
+
+###
+@orderNo = {{createOrder.response.body.data.orderNo}}
+
+### 4. 确认订单（跨域：OMS → Inventory → Event → WMS）
+POST {{baseUrl}}/scm/demo/orders/{{orderNo}}/confirm
+Authorization: Bearer {{token}}
+clientid: {{authClientId}}
+
+### 5. 快照（调试）
+GET {{baseUrl}}/scm/demo/snapshot
+Authorization: Bearer {{token}}
+clientid: {{authClientId}}
+
+### 6. 发货（将 taskNo 替换为上一步 snapshot 中的值）
+@taskNo = OT000001
+POST {{baseUrl}}/scm/demo/outbound-tasks/{{taskNo}}/ship
+Authorization: Bearer {{token}}
+clientid: {{authClientId}}

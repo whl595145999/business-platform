@@ -1,0 +1,117 @@
+/** 全局工具类 */
+
+.bp-page {
+  min-height: 100vh;
+  background-color: var(--bp-bg-page);
+}
+
+.bp-card {
+  background-color: var(--bp-bg-card);
+  border-radius: var(--bp-radius-md);
+  border: 1rpx solid var(--bp-border-color);
+}
+
+.bp-section-title {
+  font-size: var(--bp-font-subhead);
+  font-weight: var(--bp-font-weight-semibold);
+  color: var(--bp-text-primary);
+  line-height: 1.4;
+}
+
+.bp-section-desc {
+  margin-top: var(--bp-space-xs);
+  font-size: var(--bp-font-caption);
+  color: var(--bp-text-tertiary);
+}
+
+.bp-icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--bp-icon-box-size);
+  height: var(--bp-icon-box-size);
+  border-radius: var(--bp-icon-box-radius);
+  background-color: var(--bp-color-primary-light);
+  flex-shrink: 0;
+}
+
+.bp-icon-box--sm {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 16rpx;
+}
+
+.bp-text-primary {
+  color: var(--bp-text-primary);
+}
+
+.bp-text-secondary {
+  color: var(--bp-text-secondary);
+}
+
+.bp-text-tertiary {
+  color: var(--bp-text-tertiary);
+}
+
+/** CRUD 列表 / 表单 / 详情 — 企业移动端标准布局 */
+.bp-list-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--bp-space-xs) var(--bp-space-md) var(--bp-space-sm);
+}
+
+.bp-row-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--bp-space-lg);
+  margin-top: var(--bp-space-sm);
+  padding-top: var(--bp-space-sm);
+  border-top: 1rpx solid var(--bp-divider-color);
+
+  &__btn {
+    font-size: var(--bp-font-caption);
+    color: var(--bp-color-primary);
+    line-height: 1.4;
+
+    &--danger {
+      color: var(--bp-color-danger);
+    }
+  }
+}
+
+.bp-crud-page {
+  padding: var(--bp-space-md) var(--bp-spacing-page);
+  padding-bottom: calc(140rpx + env(safe-area-inset-bottom));
+}
+
+.bp-crud-section {
+  margin-bottom: var(--bp-space-md);
+}
+
+.bp-crud-group {
+  overflow: hidden;
+  border-radius: var(--bp-radius-md);
+}
+
+.bp-crud-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  padding: var(--bp-space-md) var(--bp-spacing-page);
+  padding-bottom: calc(var(--bp-space-md) + env(safe-area-inset-bottom));
+  background-color: var(--bp-bg-card);
+  border-top: 1rpx solid var(--bp-divider-color);
+  display: flex;
+  flex-direction: column;
+  gap: var(--bp-space-sm);
+}
+
+.bp-crud-hint {
+  margin-top: var(--bp-space-sm);
+  font-size: var(--bp-font-caption);
+  color: var(--bp-text-secondary);
+  line-height: 1.6;
+}

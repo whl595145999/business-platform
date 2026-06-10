@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.whl</groupId>
+        <artifactId>whl-scm-wms</artifactId>
+        <version>${revision}</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>whl-scm-wms-admin-adapter</artifactId>
+    <packaging>jar</packaging>
+
+    <description>WMS 管理端 HTTP 入口（MVP-A）</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.whl</groupId>
+            <artifactId>whl-scm-wms-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.whl</groupId>
+            <artifactId>whl-scm-wms-biz</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.whl</groupId>
+            <artifactId>whl-framework-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.whl</groupId>
+            <artifactId>whl-framework-doc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.whl</groupId>
+            <artifactId>whl-framework-excel</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.whl</groupId>
+            <artifactId>whl-framework-log</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

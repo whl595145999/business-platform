@@ -1,0 +1,20 @@
+package ${packageScmApi}.command;
+
+#parse("vm/scm/common/java-lombok-data.vm")
+
+/**
+ * 删除${functionName}命令。
+ *
+#parse("vm/scm/common/java-doc-footer.vm")
+ */
+@Data
+@NoArgsConstructor
+public class Delete${ClassName}Command {
+
+    /** 租户编号 */
+    private String tenantId;
+
+    /** $businessKeyColumn.columnComment */
+    private ${businessKeyColumn.javaType} ${businessKeyColumn.javaField};
+
+}

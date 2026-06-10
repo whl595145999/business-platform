@@ -1,0 +1,58 @@
+/* #region scm-gen:${scmGenTag} — ${functionName} | ${tableName} | ${datetime} */
+export interface ${ClassName}VO {
+#foreach ($column in $columns)
+#if($column.list && !$table.isSuperColumn($column.javaField))
+  /** $column.columnComment */
+  ${column.javaField}:#if($column.javaField.indexOf("id") != -1 || $column.javaField.indexOf("Id") != -1) string | number;
+                        #elseif($column.javaType == 'Long' || $column.javaType == 'Integer' || $column.javaType == 'Double' || $column.javaType == 'Float' || $column.javaType == 'BigDecimal') number;
+                        #elseif($column.javaType == 'Boolean') boolean;
+                        #else string;
+                    #end
+
+#end
+#end
+}
+
+export interface ${ClassName}Form {
+#foreach ($column in $columns)
+#if(($column.insert || $column.edit) && !($pkIncrement && $column.pk))
+  /** $column.columnComment */
+  ${column.javaField}?:#if($column.javaField.indexOf("id") != -1 || $column.javaField.indexOf("Id") != -1) string | number;
+                        #elseif($column.javaType == 'Long' || $column.javaType == 'Integer' || $column.javaType == 'Double' || $column.javaType == 'Float' || $column.javaType == 'BigDecimal') number;
+                        #elseif($column.javaType == 'Boolean') boolean;
+                        #else string;
+                    #end
+
+#end
+#end
+}
+
+export interface ${ClassName}Query {
+  tenantId?: string;
+  pageNum?: number;
+  pageSize?: number;
+#foreach ($column in $columns)
+#if($column.query && $column.queryType != 'BETWEEN')
+  /** $column.columnComment */
+  ${column.javaField}?:#if($column.javaField.indexOf("id") != -1 || $column.javaField.indexOf("Id") != -1) string | number;
+                        #elseif($column.javaType == 'Long' || $column.javaType == 'Integer' || $column.javaType == 'Double' || $column.javaType == 'Float' || $column.javaType == 'BigDecimal') number;
+                        #elseif($column.javaType == 'Boolean') boolean;
+                        #else string;
+                    #end
+
+#end
+#if($column.query && $column.queryType == 'BETWEEN')
+  /** $column.columnComment 开始 */
+  ${column.javaField}Begin?:#if($column.javaType == 'Long' || $column.javaType == 'Integer' || $column.javaType == 'Double' || $column.javaType == 'Float' || $column.javaType == 'BigDecimal') number;
+                        #else string;
+                    #end
+
+  /** $column.columnComment 结束 */
+  ${column.javaField}End?:#if($column.javaType == 'Long' || $column.javaType == 'Integer' || $column.javaType == 'Double' || $column.javaType == 'Float' || $column.javaType == 'BigDecimal') number;
+                        #else string;
+                    #end
+
+#end
+#end
+}
+/* #endregion scm-gen:${scmGenTag} */

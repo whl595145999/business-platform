@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>whl-scm-platform</artifactId>
+        <groupId>com.whl</groupId>
+        <version>${revision}</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <modules>
+        <module>whl-framework-kernel</module>
+        <module>whl-framework-event</module>
+        <module>whl-framework-bom</module>
+        <module>whl-framework-social</module>
+        <module>whl-framework-core</module>
+        <module>whl-framework-doc</module>
+        <module>whl-framework-excel</module>
+        <module>whl-framework-idempotent</module>
+        <module>whl-framework-job</module>
+        <module>whl-framework-log</module>
+        <module>whl-framework-mail</module>
+        <module>whl-framework-mybatis</module>
+        <module>whl-framework-oss</module>
+        <module>whl-framework-ratelimiter</module>
+        <module>whl-framework-redis</module>
+        <module>whl-framework-satoken</module>
+        <module>whl-framework-security</module>
+        <module>whl-framework-sms</module>
+        <module>whl-framework-web</module>
+        <module>whl-framework-translation</module>
+        <module>whl-framework-sensitive</module>
+        <module>whl-framework-json</module>
+        <module>whl-framework-encrypt</module>
+        <module>whl-framework-tenant</module>
+        <module>whl-framework-websocket</module>
+        <module>whl-framework-sse</module>
+    </modules>
+
+    <artifactId>whl-framework</artifactId>
+    <packaging>pom</packaging>
+
+    <description>
+        whl-framework 技术层聚合模块
+    </description>
+
+</project>

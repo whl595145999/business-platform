@@ -1,0 +1,5 @@
+com.whl.framework.web.config.CaptchaConfig
+com.whl.framework.web.config.FilterConfig
+com.whl.framework.web.config.I18nConfig
+com.whl.framework.web.config.ResourcesConfig
+com.whl.framework.web.config.UndertowConfig

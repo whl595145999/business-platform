@@ -1,0 +1,5 @@
+<!--
+  ${functionName}管理页（scm_crud 生成）
+  表: ${tableName} | API: ${scmApiPrefix} | 权限: ${scmPermPrefix}
+  组件: ${scmMenuComponent} | 标识: scm-gen:${scmGenTag} | ${datetime}
+-->

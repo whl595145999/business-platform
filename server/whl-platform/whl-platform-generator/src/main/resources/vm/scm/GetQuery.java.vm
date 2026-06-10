@@ -1,0 +1,20 @@
+package ${packageScmApi}.query;
+
+#parse("vm/scm/common/java-lombok-data.vm")
+
+/**
+ * 按业务键查询${functionName}。
+ *
+#parse("vm/scm/common/java-doc-footer.vm")
+ */
+@Data
+@NoArgsConstructor
+public class Get${ClassName}Query {
+
+    /** 租户编号 */
+    private String tenantId;
+
+    /** $businessKeyColumn.columnComment */
+    private ${businessKeyColumn.javaType} ${businessKeyColumn.javaField};
+
+}

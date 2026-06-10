@@ -1,0 +1,24 @@
+package ${packageScmApi}.dto;
+
+#foreach ($import in $importList)
+import ${import};
+#end
+#parse("vm/scm/common/java-lombok-data.vm")
+
+/**
+ * ${functionName} DTO，对应表 {@code ${tableName}}。
+ *
+#parse("vm/scm/common/java-doc-footer.vm")
+ */
+@Data
+@NoArgsConstructor
+public class ${ClassName}Dto {
+
+#foreach ($column in $columns)
+#if($column.list && !$table.isSuperColumn($column.javaField))
+    /** $column.columnComment */
+    private ${column.javaType} ${column.javaField};
+
+#end
+#end
+}

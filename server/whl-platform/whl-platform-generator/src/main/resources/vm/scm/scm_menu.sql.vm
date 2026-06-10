@@ -1,0 +1,30 @@
+-- ${functionName} 菜单与按钮权限（scm_crud 生成）
+-- 表：${tableName} | 标识：scm-gen:${scmGenTag} | 生成：${datetime}
+-- menu_id=${scmMenuId}（请确认 ${scmMenuId}~${scmMenuId}+3 未被占用）
+-- 权限前缀：${scmPermPrefix} | 组件：${scmMenuComponent}
+-- 执行后 admin 需重新登录以刷新菜单/权限缓存
+
+SET NAMES utf8mb4;
+
+#set($menuAddId = $Integer.parseInt($scmMenuId) + 1)
+#set($menuEditId = $Integer.parseInt($scmMenuId) + 2)
+#set($menuRemoveId = $Integer.parseInt($scmMenuId) + 3)
+
+-- 页面菜单
+insert into sys_menu values('${scmMenuId}', '${functionName}', '${parentMenuId}', '${scmMenuOrder}', '${scmDomain}/${businessName}', '${scmMenuComponent}', '', 1, 0, 'C', '0', '0', '${scmPermPrefix}:list', 'list', 103, 1, sysdate(), null, null, '${functionName}（${tableName}）')
+on duplicate key update menu_name = values(menu_name), component = values(component), perms = values(perms), order_num = values(order_num), update_time = sysdate();
+
+-- 按钮：新增 / 修改 / 删除
+insert into sys_menu values('${menuAddId}', '${functionName}新增', '${scmMenuId}', '1', '', '', '', 1, 0, 'F', '0', '0', '${scmPermPrefix}:add', '#', 103, 1, sysdate(), null, null, '')
+on duplicate key update perms = values(perms), update_time = sysdate();
+insert into sys_menu values('${menuEditId}', '${functionName}修改', '${scmMenuId}', '2', '', '', '', 1, 0, 'F', '0', '0', '${scmPermPrefix}:edit', '#', 103, 1, sysdate(), null, null, '')
+on duplicate key update perms = values(perms), update_time = sysdate();
+insert into sys_menu values('${menuRemoveId}', '${functionName}删除', '${scmMenuId}', '3', '', '', '', 1, 0, 'F', '0', '0', '${scmPermPrefix}:remove', '#', 103, 1, sysdate(), null, null, '')
+on duplicate key update perms = values(perms), update_time = sysdate();
+
+-- 超级管理员角色授权（role_id=1）
+insert ignore into sys_role_menu values ('1', '${parentMenuId}');
+insert ignore into sys_role_menu values ('1', '${scmMenuId}');
+insert ignore into sys_role_menu values ('1', '${menuAddId}');
+insert ignore into sys_role_menu values ('1', '${menuEditId}');
+insert ignore into sys_role_menu values ('1', '${menuRemoveId}');

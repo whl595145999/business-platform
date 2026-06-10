@@ -1,0 +1,8 @@
+/* scm-gen:${scmGenTag} — 合并到 ${scmErrorCodeClass}.java | ${functionName} | ${tableName} | ${datetime} */
+#set($underscoreIdx = $tableName.indexOf('_'))
+#set($errorBiz = $tableName.substring($underscoreIdx + 1).toUpperCase())
+    /** ${functionName}不存在 */
+    ${scmDomain.toUpperCase()}_${errorBiz}_NOT_FOUND("${scmDomain.toUpperCase()}_${errorBiz}_NOT_FOUND", "${functionName}不存在"),
+    /** ${functionName}编码已存在 */
+    ${scmDomain.toUpperCase()}_${errorBiz}_CODE_EXISTS("${scmDomain.toUpperCase()}_${errorBiz}_CODE_EXISTS", "${functionName}编码已存在"),
+/* end scm-gen:${scmGenTag} */

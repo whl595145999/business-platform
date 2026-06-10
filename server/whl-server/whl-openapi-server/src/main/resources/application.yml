@@ -1,0 +1,126 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /openapi
+  undertow:
+    max-http-post-size: 1GB
+    buffer-size: 512
+    direct-buffers: true
+    threads:
+      io: 8
+      worker: 256
+
+captcha:
+  enable: false
+
+logging:
+  level:
+    com.whl: @logging.level@
+    org.springframework: warn
+    org.mybatis.spring.mapper: error
+  config: classpath:logback-plus.xml
+
+user:
+  password:
+    maxRetryCount: 5
+    lockTime: 10
+
+spring:
+  application:
+    name: whl-openapi-server
+  threads:
+    virtual:
+      enabled: false
+  task:
+    execution:
+      thread-name-prefix: async-
+      mode: force
+  messages:
+    basename: i18n/messages
+  profiles:
+    active: @profiles.active@
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+  mvc:
+    static-path-pattern: /static/**
+    format:
+      date-time: yyyy-MM-dd HH:mm:ss
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    serialization:
+      indent_output: false
+      fail_on_empty_beans: false
+    deserialization:
+      fail_on_unknown_properties: false
+
+sa-token:
+  token-name: Authorization
+  is-concurrent: true
+  is-share: false
+  jwt-secret-key: abcdefghijklmnopqrstuvwxyz
+
+security:
+  excludes:
+    - /*.html
+    - /**/*.html
+    - /**/*.css
+    - /**/*.js
+    - /favicon.ico
+    - /error
+    - /*/api-docs
+    - /*/api-docs/**
+
+tenant:
+  enable: true
+  excludes:
+    - sys_menu
+    - sys_tenant
+    - sys_tenant_package
+    - sys_role_dept
+    - sys_role_menu
+    - sys_user_post
+    - sys_user_role
+    - sys_client
+    - sys_oss_config
+
+mybatis-plus:
+  enableLogicDelete: true
+  mapperPackage: com.whl.platform.**.mapper,com.whl.**.mapper
+  mapperLocations: classpath*:mapper/**/*Mapper.xml
+  typeAliasesPackage: com.whl.platform.**.domain,com.whl.scm.**.domain
+  global-config:
+    dbConfig:
+      idType: ASSIGN_ID
+
+mybatis-encryptor:
+  enable: false
+
+api-decrypt:
+  enabled: false
+
+springdoc:
+  api-docs:
+    enabled: true
+  info:
+    title: '供应链业务平台 OpenAPI'
+    description: '对外 OpenAPI：/openapi/auth/* + /openapi/scm/**'
+    version: '版本号: ${project.version}'
+    contact:
+      name: whl
+      url: https://gitee.com/595145999/business-platform
+  group-configs:
+    - group: 1.认证模块
+      packages-to-scan: com.whl.platform.auth
+    - group: 2.SCM-OpenAPI
+      packages-to-scan: com.whl.scm.wms.adapter.openapi
+
+xss:
+  enabled: true
+  excludeUrls:
+    - /system/notice
+
+sse:
+  enabled: false
+  path: /resource/sse

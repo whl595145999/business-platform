@@ -1,0 +1,72 @@
+package ${packageScmApi}.facade;
+
+import ${packageScmApi}.command.Create${ClassName}Command;
+import ${packageScmApi}.command.Delete${ClassName}Command;
+import ${packageScmApi}.command.Update${ClassName}Command;
+import ${packageScmApi}.dto.${ClassName}Dto;
+import ${packageScmApi}.page.ScmPageResult;
+import ${packageScmApi}.query.Get${ClassName}Query;
+import ${packageScmApi}.query.List${ClassName}OptionsQuery;
+import ${packageScmApi}.query.Page${ClassName}Query;
+
+import java.util.List;
+
+/**
+ * ${functionName} Facade（标准 CRUD + 分页#if($scmGenerateOptions) + 下拉选项#end）。
+ * <p>
+ * 对应表 {@code ${tableName}}，REST 前缀 {@code ${scmApiPrefix}}。
+ *
+#parse("vm/scm/common/java-doc-footer.vm")
+ */
+public interface ${ClassName}Facade {
+
+    /**
+     * 分页查询${functionName}。
+     *
+     * @param query 分页与筛选条件
+     * @return 分页结果
+     */
+    ScmPageResult<${ClassName}Dto> page${ClassName}(Page${ClassName}Query query);
+
+    /**
+     * 按业务键查询单条${functionName}。
+     *
+     * @param query 租户 + 业务键
+     * @return DTO
+     */
+    ${ClassName}Dto get${ClassName}(Get${ClassName}Query query);
+
+    /**
+     * 创建${functionName}。
+     *
+     * @param command 创建命令
+     * @return 新建 DTO
+     */
+    ${ClassName}Dto create${ClassName}(Create${ClassName}Command command);
+
+    /**
+     * 更新${functionName}。
+     *
+     * @param command 更新命令
+     * @return 更新后 DTO
+     */
+    ${ClassName}Dto update${ClassName}(Update${ClassName}Command command);
+
+    /**
+     * 删除${functionName}。
+     *
+     * @param command 删除命令
+     */
+    void delete${ClassName}(Delete${ClassName}Command command);
+#if($scmGenerateOptions)
+
+    /**
+     * 查询${functionName}下拉选项。
+     *
+     * @param query 租户编号
+     * @return 选项列表
+     */
+    List<${ClassName}Dto> list${ClassName}Options(List${ClassName}OptionsQuery query);
+#end
+
+}

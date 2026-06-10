@@ -1,0 +1,51 @@
+---
+description: 业务平台 HTTP/API 规范（与 admin-web 一致）
+globs: src/api/**/*.ts,src/http/**/*.ts,env/**
+alwaysApply: false
+---
+
+# HTTP / API 规范
+
+## 唯一请求入口
+
+**供应链业务代码统一使用 `src/http/http.ts`**，禁止使用 alova / vue-query 调用业务接口。
+
+| 用途 | 路径 |
+|------|------|
+| 业务 API | `src/http/http.ts` |
+| 拦截器（Token、clientid、加密） | `src/http/interceptor.ts` |
+| 响应解密与 data/rows 提取 | `src/http/response.ts` |
+| 演示/脚手架示例 | `src/http/alova.ts`、`vue-query.ts`（勿用于业务） |
+
+## 与 admin-web 对齐的约定
+
+- 路径、方法、参数与 `business-platform-admin-web` 的 `src/api/**` 保持一致
+- 请求头：始终带 `clientid`；登录后带 `Authorization: Bearer {token}`
+- 登录、注册、改密等敏感 POST：`{ isToken: false, isEncrypt: true }` 或 `{ isEncrypt: true }`
+- 无需登录：`{ isToken: false }`
+- 成功码：`code === 200`
+- 普通响应：`data` 字段；分页列表：`rows` + `total`（勿只解构 `data`）
+
+## 编写示例
+
+```typescript
+import type { IPageQuery, IPageResult } from '@/api/types/backend'
+import { http } from '@/http/http'
+
+export function listUser(query: IPageQuery) {
+  return http.get<IPageResult<UserVo>>('/system/user/list', query)
+}
+
+export function login(data: ILoginForm) {
+  return http.post<ILoginVo>('/auth/login', data, undefined, undefined, {
+    isToken: false,
+    isEncrypt: true,
+  })
+}
+```
+
+## 类型与文件
+
+- 通用类型：`src/api/types/backend.ts`（`ILoginForm`、`IPageResult` 等）
+- 模块类型：`src/api/types/system/user.ts` 等
+- API 实现：`src/api/system/user.ts`（与 admin-web 同模块路径）

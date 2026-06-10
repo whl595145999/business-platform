@@ -1,0 +1,60 @@
+package ${packageScmBiz}.domain;
+
+#foreach ($column in $columns)
+#if($column.javaField == 'tenantId')
+#set($IsTenant = 1)
+#end
+#end
+#if($IsTenant == 1)
+import com.whl.framework.tenant.core.TenantEntity;
+#else
+import com.whl.framework.mybatis.core.domain.BaseEntity;
+#end
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.io.Serial;
+#foreach ($import in $importList)
+import ${import};
+#end
+
+/**
+ * ${functionName}实体，映射表 {@code ${tableName}}。
+ *
+#parse("vm/scm/common/java-doc-footer.vm")
+ */
+#if($IsTenant == 1)
+#set($Entity = "TenantEntity")
+#else
+#set($Entity = "BaseEntity")
+#end
+@Data
+@EqualsAndHashCode(callSuper = true)
+@TableName("${tableName}")
+public class ${scmEntityClass} extends ${Entity} {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+#foreach ($column in $columns)
+#if(!$table.isSuperColumn($column.javaField))
+    /** $column.columnComment */
+#if($column.javaField == 'delFlag')
+    @TableLogic
+#end
+#if($column.pk)
+#if($pkIncrement)
+    @TableId(type = IdType.AUTO, value = "${column.columnName}")
+#else
+    @TableId(value = "${column.columnName}")
+#end
+#end
+    private ${column.javaType} ${column.javaField};
+
+#end
+#end
+}

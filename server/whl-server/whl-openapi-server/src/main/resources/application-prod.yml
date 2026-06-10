@@ -1,0 +1,15 @@
+--- # 生产环境占位（部署时覆盖）
+spring:
+  datasource:
+    dynamic:
+      datasource:
+        master:
+          url: jdbc:mysql://localhost:3306/business_platform?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true
+          username: root
+          password: root
+
+spring.data:
+  redis:
+    host: localhost
+    port: 6379
+    database: 0

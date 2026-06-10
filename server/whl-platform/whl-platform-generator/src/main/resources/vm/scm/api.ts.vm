@@ -1,0 +1,73 @@
+#parse("vm/scm/common/ts-file-header.vm")
+import request from '@/utils/request';
+import { AxiosPromise } from 'axios';
+import { ${ClassName}VO, ${ClassName}Form, ${ClassName}Query } from '@/api/scm/types';
+
+/**
+ * 分页查询${functionName}
+ */
+export const page${ClassName} = (query?: ${ClassName}Query): AxiosPromise<{ rows: ${ClassName}VO[]; total: number }> => {
+  return request({
+    url: '${scmApiPrefix}',
+    method: 'get',
+    params: query
+  });
+};
+
+/**
+ * 查询${functionName}详情
+ */
+export const get${ClassName} = (${businessKeyColumn.javaField}: string | number, tenantId?: string): AxiosPromise<${ClassName}VO> => {
+  return request({
+    url: '${scmApiPrefix}/' + ${businessKeyColumn.javaField},
+    method: 'get',
+    params: { tenantId }
+  });
+};
+
+/**
+ * 新增${functionName}
+ */
+export const add${ClassName} = (data: ${ClassName}Form) => {
+  return request({
+    url: '${scmApiPrefix}',
+    method: 'post',
+    data
+  });
+};
+
+/**
+ * 修改${functionName}
+ */
+export const update${ClassName} = (${businessKeyColumn.javaField}: string | number, data: ${ClassName}Form) => {
+  return request({
+    url: '${scmApiPrefix}/' + ${businessKeyColumn.javaField},
+    method: 'put',
+    data
+  });
+};
+
+/**
+ * 删除${functionName}
+ */
+export const del${ClassName} = (${businessKeyColumn.javaField}: string | number | Array<string | number>, tenantId?: string) => {
+  const key = Array.isArray(${businessKeyColumn.javaField}) ? ${businessKeyColumn.javaField}[0] : ${businessKeyColumn.javaField};
+  return request({
+    url: '${scmApiPrefix}/' + key,
+    method: 'delete',
+    params: { tenantId }
+  });
+};
+#if($scmGenerateOptions)
+
+/**
+ * 查询${functionName}下拉选项
+ */
+export const list${ClassName}Options = (tenantId?: string): AxiosPromise<${ClassName}VO[]> => {
+  return request({
+    url: '${scmApiPrefix}/options',
+    method: 'get',
+    params: { tenantId }
+  });
+};
+#end

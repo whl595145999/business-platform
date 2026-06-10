@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.whl</groupId>
+        <artifactId>whl-platform</artifactId>
+        <version>${revision}</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>whl-platform-auth</artifactId>
+
+    <description>
+        平台统一认证（admin / openapi / pda 共用，可演进为独立认证中心）
+    </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.whl</groupId>
+            <artifactId>whl-platform-system</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.whl</groupId>
+            <artifactId>whl-framework-social</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.whl</groupId>
+            <artifactId>whl-framework-ratelimiter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.whl</groupId>
+            <artifactId>whl-framework-mail</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.whl</groupId>
+            <artifactId>whl-framework-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.whl</groupId>
+            <artifactId>whl-framework-sms</artifactId>
+        </dependency>
+
+    </dependencies>
+
+</project>

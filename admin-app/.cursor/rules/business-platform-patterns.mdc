@@ -1,0 +1,83 @@
+---
+description: 供应链业务平台移动端开发规范（与 admin-web 三方对齐）
+globs: src/**/*.ts,src/**/*.vue,env/**,docs/**
+alwaysApply: false
+---
+
+# business-platform-admin-app
+
+## 三方对齐原则
+
+| 来源 | 作用 |
+|------|------|
+| `business-platform-admin-web` | API 路径、参数、加密、权限标识的**唯一接口参考** |
+| `docs/开发规范.md` | 人类可读完整规范 |
+| 本仓库代码 | 实现须与上两者一致；移动端差异仅 UI/分包路径 |
+
+新增接口前：先在 admin-web `src/api/` 找到对应方法，再在本项目 `src/api/` 同名模块实现。
+
+## 后端对接
+
+- 后端：RuoYi-Vue-Plus 5.x，与 PC 端共用
+- H5 开发：`/dev-api` 代理 → `VITE_SERVER_BASEURL`
+- `VITE_CLIENT_ID`、`VITE_APP_ENCRYPT`、RSA 密钥与 admin-web `.env` 一致
+
+## 认证
+
+- Token Key：`App-Token`（`src/constants/app.ts`）
+- 登录：`POST /auth/login`，`isEncrypt: true`
+- 用户信息：`GET /system/user/getInfo`
+
+## 目录（当前实现）
+
+```
+src/api/auth.ts
+src/api/system/user.ts          # 已与 admin-web 用户接口对齐
+src/api/types/backend.ts
+src/api/types/system/user.ts
+src/pages-sub/admin/user/index.vue   # 列表标杆页（z-paging）
+src/utils/menu.ts               # ADMIN_PAGE_MAP 路由映射
+```
+
+## 页面与分包
+
+- TabBar：首页、我的
+- 系统管理：`src/pages-sub/admin/*`
+- 供应链业务（规划）：`src/pages-sub/scm/*`
+
+## 权限
+
+```typescript
+import { useAuth } from '@/hooks/useAuth'
+hasPermi('system:user:list')  // 与后台菜单 perms 一致
+```
+
+## UI 分工
+
+详见 `docs/UI组件规范.md`。
+
+**业务组件（仅 4 个）**：`AppPage`、`PageHero`、`MenuGrid`、`PermButton`
+
+**直接用 wot-ui 2.0.8**：
+
+| 场景 | 组件 |
+|------|------|
+| 列表菜单 / 只读详情 | `wd-cell-group` + `wd-cell` |
+| 卡片 / 宫格 / 空态 | `wd-card`、`wd-grid`、`wd-empty` |
+| **表单 / 登录** | `wd-form` + `wd-form-item`（`title`）+ `wd-input compact` |
+| **选择器** | `wd-form-item`（`is-link`、`:value`）+ 页级 `wd-picker`（`v-model:visible`） |
+| 搜索 / 按钮 | `wd-search`、`wd-button` |
+
+**禁止**：`wd-input` / `wd-picker` 上使用 `label`（v1 API，小程序无字段标题）。标杆：`pages-sub/scm/org/form.vue`。
+
+禁止再封装 wot-ui 薄包装；主色 `--bp-color-primary`。
+
+## 列表页模板
+
+`AppPage` + `z-paging` + `wd-empty`（空态），参考 `pages-sub/admin/user/index.vue`。
+
+## 新增 CRUD 模块
+
+1. 读 `docs/CRUD模块规范.md`
+2. 使用 Skill `.cursor/skills/generate-crud-module/SKILL.md` 或 `pnpm scaffold:crud`
+3. 对照 admin-web 同名 API，更新 `ADMIN_PAGE_MAP` 与 `docs/admin-web接口对照.md`

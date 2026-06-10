@@ -1,0 +1,12 @@
+package ${packageScmBiz}.mapper;
+
+import com.whl.framework.mybatis.core.mapper.BaseMapperPlus;
+import ${packageScmBiz}.domain.${scmEntityClass};
+
+/**
+ * ${functionName} Mapper，对应表 {@code ${tableName}}。
+ *
+#parse("vm/scm/common/java-doc-footer.vm")
+ */
+public interface ${scmEntityClass}Mapper extends BaseMapperPlus<${scmEntityClass}, ${scmEntityClass}> {
+}

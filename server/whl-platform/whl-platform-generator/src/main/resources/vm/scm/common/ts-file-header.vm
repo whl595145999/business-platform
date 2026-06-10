@@ -1,0 +1,5 @@
+/**
+ * ${functionName}（scm_crud 生成）
+ * 表: ${tableName} | API: ${scmApiPrefix} | 标识: scm-gen:${scmGenTag}
+ * @generated ${datetime}
+ */

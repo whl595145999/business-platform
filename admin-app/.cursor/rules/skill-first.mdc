@@ -1,0 +1,58 @@
+---
+description: admin-app 问题与实现必须先读 AGENTS.md 并按场景加载对应 Skill
+alwaysApply: true
+---
+
+# Skill 优先（admin-app）
+
+本仓库（`business-platform-admin-app`）相关**问答、实现、修 bug、评审**，Agent **必须先**：
+
+1. 读 [AGENTS.md](../AGENTS.md) 做场景分流  
+2. **读取并遵循**对应 Skill 全文（不要凭记忆即兴发挥）  
+3. 细则以 `docs/` 为 SSOT，Skill 只负责流程与硬约束速查  
+
+## 场景 → Skill
+
+| 用户意图 | 必须先加载 |
+|----------|------------|
+| 新建/扩展标准 list + form CRUD（system/scm） | `.cursor/skills/generate-crud-module/SKILL.md` |
+| 非常规页、首页/工作台、跨端 UI、MP 联调、PDA（B8+） | `.cursor/skills/uniapp-dev/SKILL.md` |
+| UI 走查 / 线框 / 移动视觉方案 | `business-platform/.cursor/skills/senior-ui-ux-designer/SKILL.md`（Audit / 增量 / 全量） |
+| 全栈从 PRD 到多仓落地 | `business-platform/.cursor/skills/scm-platform-dev/SKILL.md` |
+| PR / 提交前自检 | `business-platform/.cursor/skills/code-review-scm`（§E） |
+
+## Skill 协作链（UI + 实现）
+
+**可以、且推荐在「新页 / 改版」时串联 UI Skill**，顺序固定：
+
+```text
+业务 PRD 已定（非 UI Skill 职责）
+  → @senior-ui-ux-designer   Audit（Step 0）或 全量 Step 1–8 / 增量 3–4+8
+  → 实现（按页面类型二选一）
+       ├─ 标准 CRUD  → @generate-crud-module
+       └─ 复杂 / 首页 / PDA → @uniapp-dev
+  → 落地约束：docs/UI组件规范.md · wot-ui 2.0.8 · 标杆 org/form.vue
+```
+
+| 触发 UI Skill 的信号 | 不触发（直接实现 Skill） |
+|----------------------|---------------------------|
+| 新模块、首页/工作台改版、双端要对齐 | 修 bug、对齐 API、MP 域名/401 |
+| 「怎么布局」「不好看」「出个线框」「UX 点评/走查」 | 单文件 wot-ui v2 迁移（uniapp-dev 例 4） |
+| `@senior-ui-ux-designer` 显式点名 | 已有 org/post 标杆可复制的 CRUD |
+
+**分工**：`senior-ui-ux-designer` **不写 Vue 代码**；Handoff 后由 `generate-crud-module` / `uniapp-dev` 编码。  
+移动设计输入对齐：`business-platform/.cursor/skills/senior-ui-ux-designer/reference.md` §Mobile。
+
+**禁止**：未读 Skill 就写 CRUD 页面；对 SCM 使用 `listXxx` 或 `/list`；PDA 使用 `/api/scm/...`。
+
+## 文档 SSOT（Skill 不重复抄写）
+
+| 主题 | 文档 |
+|------|------|
+| 技术栈版本、环境、HTTP、FAQ | `docs/开发规范.md` |
+| wot-ui 2.0.8 表单/布局 | `docs/UI组件规范.md` |
+| 模块分层与清单 | `docs/CRUD模块规范.md` |
+
+## 用户可显式触发
+
+在提问时加 `@uniapp-dev`、`@generate-crud-module` 等，与上表一致；未加 `@` 时 Agent 仍须按本规则自动选 Skill。

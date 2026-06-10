@@ -1,0 +1,174 @@
+package ${packageScmAdapter}.controller;
+
+import cn.dev33.satoken.annotation.SaCheckLogin;
+import com.whl.framework.core.domain.R;
+import com.whl.framework.mybatis.core.page.TableDataInfo;
+import com.whl.framework.web.core.BaseController;
+import ${packageScmAdapter}.controller.request.Save${ClassName}Request;
+import ${packageScmAdapter}.controller.vo.${ClassName}Vo;
+import ${packageScmAdapter}.support.ScmTenantResolver;
+import ${packageScmApi}.command.Create${ClassName}Command;
+import ${packageScmApi}.command.Delete${ClassName}Command;
+import ${packageScmApi}.command.Update${ClassName}Command;
+import ${packageScmApi}.dto.${ClassName}Dto;
+import ${packageScmApi}.facade.${ClassName}Facade;
+import ${packageScmApi}.query.Get${ClassName}Query;
+import ${packageScmApi}.query.List${ClassName}OptionsQuery;
+import ${packageScmApi}.query.Page${ClassName}Query;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+#set($BizKeyAttr = $businessKeyColumn.javaField.substring(0,1).toUpperCase() + $businessKeyColumn.javaField.substring(1))
+
+/**
+ * ${functionName}管理端接口。
+ * <p>
+ * REST 前缀 {@code ${scmApiPrefix}}，权限前缀 {@code ${scmPermPrefix}}。
+#if($scmMenuId && $scmMenuId != '')
+ * 菜单 ID {@code ${scmMenuId}}，组件 {@code ${scmMenuComponent}}。
+#end
+ *
+#parse("vm/scm/common/java-doc-footer.vm")
+ */
+@Tag(name = "SCM ${scmDomainCap} - ${functionName}")
+@Validated
+@SaCheckLogin
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("${scmApiPrefix}")
+public class Scm${ClassName}Controller extends BaseController {
+
+    private final ${ClassName}Facade ${className}Facade;
+
+    /**
+     * 分页查询${functionName}。
+     */
+    @Operation(summary = "分页查询${functionName}")
+    @GetMapping
+    public TableDataInfo<${ClassName}Vo> page${ClassName}(Page${ClassName}Query query) {
+        query.setTenantId(ScmTenantResolver.resolve(query.getTenantId()));
+        var page = ${className}Facade.page${ClassName}(query);
+        return new TableDataInfo<>(page.getRows().stream().map(this::toVo).toList(), page.getTotal());
+    }
+
+#if($scmGenerateOptions)
+    /**
+     * 查询${functionName}下拉选项。
+     */
+    @Operation(summary = "查询${functionName}选项")
+    @GetMapping("/options")
+    public R<List<${ClassName}Vo>> list${ClassName}Options(@RequestParam(required = false) String tenantId) {
+        List${ClassName}OptionsQuery query = new List${ClassName}OptionsQuery();
+        query.setTenantId(ScmTenantResolver.resolve(tenantId));
+        return R.ok(${className}Facade.list${ClassName}Options(query).stream().map(this::toVo).toList());
+    }
+
+#end
+    /**
+     * 按业务键查询单条${functionName}。
+     */
+    @Operation(summary = "查询单个${functionName}")
+    @GetMapping("/{${businessKeyColumn.javaField}}")
+    public R<${ClassName}Vo> get${ClassName}(
+        @PathVariable ${businessKeyColumn.javaType} ${businessKeyColumn.javaField},
+        @RequestParam(required = false) String tenantId
+    ) {
+        Get${ClassName}Query query = new Get${ClassName}Query();
+        query.setTenantId(ScmTenantResolver.resolve(tenantId));
+        query.set${BizKeyAttr}(${businessKeyColumn.javaField});
+        return R.ok(toVo(${className}Facade.get${ClassName}(query)));
+    }
+
+    /**
+     * 新建${functionName}。
+     */
+    @Operation(summary = "创建${functionName}")
+    @PostMapping
+    public R<${ClassName}Vo> create${ClassName}(@Validated @RequestBody Save${ClassName}Request request) {
+        return R.ok(toVo(${className}Facade.create${ClassName}(toCreateCommand(request))));
+    }
+
+    /**
+     * 更新${functionName}。
+     */
+    @Operation(summary = "更新${functionName}")
+    @PutMapping("/{${businessKeyColumn.javaField}}")
+    public R<${ClassName}Vo> update${ClassName}(
+        @PathVariable ${businessKeyColumn.javaType} ${businessKeyColumn.javaField},
+        @Validated @RequestBody Save${ClassName}Request request
+    ) {
+        return R.ok(toVo(${className}Facade.update${ClassName}(toUpdateCommand(${businessKeyColumn.javaField}, request))));
+    }
+
+    /**
+     * 删除${functionName}。
+     */
+    @Operation(summary = "删除${functionName}")
+    @DeleteMapping("/{${businessKeyColumn.javaField}}")
+    public R<Void> delete${ClassName}(
+        @PathVariable ${businessKeyColumn.javaType} ${businessKeyColumn.javaField},
+        @RequestParam(required = false) String tenantId
+    ) {
+        Delete${ClassName}Command command = new Delete${ClassName}Command();
+        command.setTenantId(ScmTenantResolver.resolve(tenantId));
+        command.set${BizKeyAttr}(${businessKeyColumn.javaField});
+        ${className}Facade.delete${ClassName}(command);
+        return R.ok();
+    }
+
+    /** Dto → 管理端 Vo（HTTP 出参，与前端 types.ts 中 ${ClassName}VO 对齐）。 */
+    private ${ClassName}Vo toVo(${ClassName}Dto dto) {
+        if (dto == null) {
+            return null;
+        }
+        ${ClassName}Vo vo = new ${ClassName}Vo();
+#foreach ($column in $columns)
+#if($column.list && !$table.isSuperColumn($column.javaField))
+        vo.set${column.javaField.substring(0,1).toUpperCase()}${column.javaField.substring(1)}(dto.get${column.javaField.substring(0,1).toUpperCase()}${column.javaField.substring(1)}());
+#end
+#end
+        return vo;
+    }
+
+    /** 将保存请求体转换为创建命令（含租户解析）。 */
+    private Create${ClassName}Command toCreateCommand(Save${ClassName}Request request) {
+        Create${ClassName}Command command = new Create${ClassName}Command();
+#foreach ($column in $columns)
+#if($column.insert && !($pkIncrement && $column.pk))
+#if($column.javaField == 'tenantId')
+        command.setTenantId(ScmTenantResolver.resolve(request.getTenantId()));
+#else
+        command.set${column.javaField.substring(0,1).toUpperCase()}${column.javaField.substring(1)}(request.get${column.javaField.substring(0,1).toUpperCase()}${column.javaField.substring(1)}());
+#end
+#end
+#end
+        return command;
+    }
+
+    /** 将保存请求体转换为更新命令（业务键来自路径）。 */
+    private Update${ClassName}Command toUpdateCommand(${businessKeyColumn.javaType} ${businessKeyColumn.javaField}, Save${ClassName}Request request) {
+        Update${ClassName}Command command = new Update${ClassName}Command();
+        command.setTenantId(ScmTenantResolver.resolve(request.getTenantId()));
+        command.set${BizKeyAttr}(${businessKeyColumn.javaField});
+#foreach ($column in $columns)
+#if($column.edit && $column.javaField != $businessKeyColumn.javaField)
+        command.set${column.javaField.substring(0,1).toUpperCase()}${column.javaField.substring(1)}(request.get${column.javaField.substring(0,1).toUpperCase()}${column.javaField.substring(1)}());
+#end
+#end
+        return command;
+    }
+
+}

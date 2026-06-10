@@ -1,0 +1,26 @@
+import { getAllPages } from '@/utils'
+
+export const LOGIN_STRATEGY_MAP = {
+  DEFAULT_NO_NEED_LOGIN: 0,
+  DEFAULT_NEED_LOGIN: 1,
+}
+
+/** 业务平台：默认白名单策略，需登录后访问 */
+export const LOGIN_STRATEGY = LOGIN_STRATEGY_MAP.DEFAULT_NEED_LOGIN
+export const isNeedLoginMode = LOGIN_STRATEGY === LOGIN_STRATEGY_MAP.DEFAULT_NEED_LOGIN
+
+export const LOGIN_PAGE = '/pages/auth/login'
+export const REGISTER_PAGE = '/pages/auth/register'
+
+export const LOGIN_PAGE_LIST = [LOGIN_PAGE, REGISTER_PAGE]
+
+export const excludeLoginPathList = getAllPages('excludeLoginPath').map(page => page.path)
+
+export const EXCLUDE_LOGIN_PATH_LIST = [
+  ...excludeLoginPathList,
+  LOGIN_PAGE,
+  REGISTER_PAGE,
+]
+
+/** 小程序复用 H5 登录页 */
+export const LOGIN_PAGE_ENABLE_IN_MP = true

@@ -1,0 +1,59 @@
+package ${packageScmApi}.query;
+
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+#parse("vm/scm/common/java-lombok-data.vm")
+
+import java.io.Serial;
+import java.io.Serializable;
+#foreach ($import in $importList)
+import ${import};
+#end
+
+/**
+ * ${functionName}分页查询。
+ *
+#parse("vm/scm/common/java-doc-footer.vm")
+ */
+@Data
+@NoArgsConstructor
+public class Page${ClassName}Query implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    private static final int DEFAULT_PAGE_NUM = 1;
+    private static final int DEFAULT_PAGE_SIZE = 10;
+
+    /** 租户编号 */
+    private String tenantId;
+
+    /** 当前页码 */
+    private Integer pageNum;
+
+    /** 每页条数 */
+    private Integer pageSize;
+
+#foreach ($column in $columns)
+#if($column.query && $column.queryType != 'BETWEEN')
+    /** $column.columnComment */
+    private ${column.javaType} ${column.javaField};
+
+#end
+#if($column.query && $column.queryType == 'BETWEEN')
+    /** $column.columnComment（开始） */
+    private ${column.javaType} ${column.javaField}Begin;
+
+    /** $column.columnComment（结束） */
+    private ${column.javaType} ${column.javaField}End;
+
+#end
+#end
+    /**
+     * 构建 MyBatis-Plus 分页对象。
+     */
+    public <T> Page<T> build() {
+        int num = pageNum == null || pageNum <= 0 ? DEFAULT_PAGE_NUM : pageNum;
+        int size = pageSize == null || pageSize <= 0 ? DEFAULT_PAGE_SIZE : pageSize;
+        return new Page<>(num, size);
+    }
+}

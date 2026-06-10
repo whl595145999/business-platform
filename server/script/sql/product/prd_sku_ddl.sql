@@ -1,0 +1,50 @@
+-- prd_sku（domains/product/prd/B2-product/PRODUCT.md §2.10）
+-- 列默认：BIGINT/INT/SMALLINT/TINYINT 0 · VARCHAR '' · 见 DATABASE.md §3.5
+-- 导入：mysql --default-character-set=utf8mb4 ... < prd_sku_ddl.sql
+
+SET NAMES utf8mb4;
+
+CREATE TABLE IF NOT EXISTS prd_sku (
+    id                      BIGINT         NOT NULL COMMENT '主键',
+    tenant_id               VARCHAR(20)    NOT NULL DEFAULT '' COMMENT '租户编号',
+    sku_code                VARCHAR(64)    NOT NULL DEFAULT '' COMMENT '货品编码，租户内唯一',
+    sku_name                VARCHAR(256)   NOT NULL DEFAULT '' COMMENT '货品名称',
+    sku_short_name          VARCHAR(64)    NOT NULL DEFAULT '' COMMENT '短名称，PDA/标签展示',
+    spec                    VARCHAR(256)   NOT NULL DEFAULT '' COMMENT '规格',
+    status                  TINYINT        NOT NULL DEFAULT 1 COMMENT '启停：1-启用,0-停用',
+    sort_order              INT            NOT NULL DEFAULT 0 COMMENT '排序',
+    remark                  VARCHAR(500)   NOT NULL DEFAULT '' COMMENT '备注',
+    category_id             BIGINT         NOT NULL DEFAULT 0 COMMENT '货品类目 prd_category.id',
+    brand_id                BIGINT         NOT NULL DEFAULT 0 COMMENT '品牌 prd_brand.id，0=未选',
+    unit_code               VARCHAR(32)    NOT NULL DEFAULT '' COMMENT '库存计量单位编码，见 sys_dict prd_unit_code',
+    item_class              SMALLINT       NOT NULL DEFAULT 0 COMMENT '货品类型：10-贸易,20-物料,30-包材,40-药品,50-虚拟,60-服务,70-半成品',
+    purchase_allowed        TINYINT        NOT NULL DEFAULT 1 COMMENT '可采购：1-是,0-否',
+    sale_allowed            TINYINT        NOT NULL DEFAULT 1 COMMENT '可销售：1-是,0-否',
+    issue_allowed           TINYINT        NOT NULL DEFAULT 0 COMMENT '可领料：1-是,0-否',
+    product_type            SMALLINT       NOT NULL DEFAULT 0 COMMENT '履约类型：10-实物,20-虚拟',
+    expiry_flag             TINYINT        NOT NULL DEFAULT 0 COMMENT '是否效期品：1-是,0-否；仅实物',
+    quota_flag              TINYINT        NOT NULL DEFAULT 0 COMMENT '是否配额：1-是,0-否；仅虚拟',
+    shelf_life_value        INT            NOT NULL DEFAULT 0 COMMENT '保质期数值',
+    shelf_life_unit         SMALLINT       NOT NULL DEFAULT 0 COMMENT '保质期单位：10-小时,20-天',
+    near_expiry_value       INT            NOT NULL DEFAULT 0 COMMENT '临期预警数值',
+    near_expiry_unit        SMALLINT       NOT NULL DEFAULT 0 COMMENT '临期预警单位：10-小时,20-天',
+    default_origin_code     VARCHAR(32)    NOT NULL DEFAULT '' COMMENT '默认产地编码，B5入库预填',
+    tax_category_code       VARCHAR(32)    NOT NULL DEFAULT '' COMMENT '国税商品和服务税收分类编码',
+    input_tax_rate          VARCHAR(32)    NOT NULL DEFAULT '' COMMENT '默认进项税率，见 sys_dict prd_tax_rate',
+    output_tax_rate         VARCHAR(32)    NOT NULL DEFAULT '' COMMENT '默认销项税率，见 sys_dict prd_tax_rate',
+    barcode_policy          SMALLINT       NOT NULL DEFAULT 20 COMMENT '条码策略：10-必须有国标码,20-可无',
+    primary_barcode         VARCHAR(32)    NOT NULL DEFAULT '' COMMENT '默认扫码条码，冗余；权威见 prd_sku_barcode',
+    create_dept             BIGINT         DEFAULT NULL COMMENT '创建部门',
+    create_by               BIGINT         DEFAULT NULL COMMENT '创建者',
+    create_time             DATETIME       DEFAULT NULL COMMENT '创建时间',
+    update_by               BIGINT         DEFAULT NULL COMMENT '更新者',
+    update_time             DATETIME       DEFAULT NULL COMMENT '更新时间',
+    del_flag                CHAR(1)        NOT NULL DEFAULT '0' COMMENT '0-正常,2-删除',
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_prd_sku_tenant_code (tenant_id, sku_code),
+    KEY idx_prd_sku_tenant_category (tenant_id, category_id),
+    KEY idx_prd_sku_tenant_status (tenant_id, status),
+    KEY idx_prd_sku_tenant_item_class (tenant_id, item_class),
+    KEY idx_prd_sku_tenant_expiry_flag (tenant_id, expiry_flag),
+    KEY idx_prd_sku_tenant_primary_barcode (tenant_id, primary_barcode)
+) ENGINE=InnoDB COMMENT='货品主数据SKU';

@@ -1,0 +1,6 @@
+com.whl.framework.translation.config.TranslationConfig
+com.whl.framework.translation.core.impl.DeptNameTranslationImpl
+com.whl.framework.translation.core.impl.DictTypeTranslationImpl
+com.whl.framework.translation.core.impl.OssUrlTranslationImpl
+com.whl.framework.translation.core.impl.UserNameTranslationImpl
+com.whl.framework.translation.core.impl.NicknameTranslationImpl

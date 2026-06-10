@@ -1,0 +1,25 @@
+package ${packageScmAdapter}.controller.request;
+
+#foreach ($import in $importList)
+import ${import};
+#end
+import lombok.Data;
+
+/**
+ * 保存${functionName} HTTP 请求体（创建/更新共用）。
+ * <p>
+ * 字段与表 {@code ${tableName}} 对齐；{@code tenantId} 仅超级管理员可指定。
+ *
+#parse("vm/scm/common/java-doc-footer.vm")
+ */
+@Data
+public class Save${ClassName}Request {
+
+#foreach ($column in $columns)
+#if(($column.insert || $column.edit) && !($pkIncrement && $column.pk))
+    /** $column.columnComment */
+    private ${column.javaType} ${column.javaField};
+
+#end
+#end
+}

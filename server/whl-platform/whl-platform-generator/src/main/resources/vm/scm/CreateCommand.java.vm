@@ -1,0 +1,24 @@
+package ${packageScmApi}.command;
+
+#foreach ($import in $importList)
+import ${import};
+#end
+#parse("vm/scm/common/java-lombok-data.vm")
+
+/**
+ * 创建${functionName}命令。
+ *
+#parse("vm/scm/common/java-doc-footer.vm")
+ */
+@Data
+@NoArgsConstructor
+public class Create${ClassName}Command {
+
+#foreach ($column in $columns)
+#if($column.insert && !($pkIncrement && $column.pk))
+    /** $column.columnComment */
+    private ${column.javaType} ${column.javaField};
+
+#end
+#end
+}

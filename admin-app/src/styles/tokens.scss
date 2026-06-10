@@ -1,0 +1,84 @@
+/**
+ * 供应链业务平台 · Design Tokens
+ * 参考：钉钉 / 飞书 / Ant Design Mobile — 留白优先、弱阴影、边框分层
+ */
+:root,
+page {
+  /* 品牌色（与 Element Plus #409EFF 弱对齐，略深以保证对比度） */
+  --bp-color-primary: #1677ff;
+  --bp-color-primary-hover: #4096ff;
+  --bp-color-primary-active: #0958d9;
+  --bp-color-primary-light: #e8f3ff;
+  --bp-color-primary-muted: #f0f7ff;
+
+  /* 功能色 */
+  --bp-color-success: #52c41a;
+  --bp-color-success-light: #f6ffed;
+  --bp-color-warning: #faad14;
+  --bp-color-warning-light: #fffbe6;
+  --bp-color-danger: #ff4d4f;
+  --bp-color-danger-light: #fff2f0;
+
+  /* 文字（三级，禁止页面再写灰色 hex） */
+  --bp-text-primary: #1a1a1a;
+  --bp-text-secondary: #666666;
+  --bp-text-tertiary: #999999;
+  --bp-text-disabled: #c8c9cc;
+  --bp-text-inverse: #ffffff;
+
+  /* 背景与边框 */
+  --bp-bg-page: #f7f8fa;
+  --bp-bg-card: #ffffff;
+  --bp-bg-hover: #f2f3f5;
+  --bp-bg-mask: rgba(0, 0, 0, 0.45);
+  --bp-border-color: #ebedf0;
+  --bp-divider-color: #ebedf0;
+
+  /* 字号 */
+  --bp-font-display: 44rpx;
+  --bp-font-title: 34rpx;
+  --bp-font-subhead: 30rpx;
+  --bp-font-body: 28rpx;
+  --bp-font-caption: 24rpx;
+  --bp-font-mini: 22rpx;
+
+  /* 字重 */
+  --bp-font-weight-medium: 500;
+  --bp-font-weight-semibold: 600;
+
+  /* 圆角（全站仅三档） */
+  --bp-radius-sm: 8rpx;
+  --bp-radius-md: 16rpx;
+  --bp-radius-lg: 24rpx;
+  --bp-radius-round: 999rpx;
+
+  /* 间距（8 的倍数） */
+  --bp-space-xs: 8rpx;
+  --bp-space-sm: 16rpx;
+  --bp-space-md: 24rpx;
+  --bp-space-lg: 32rpx;
+  --bp-space-xl: 48rpx;
+  --bp-spacing-page: 32rpx;
+  --bp-spacing-card: 32rpx;
+
+  /* 阴影：默认用边框，仅浮层用阴影 */
+  --bp-shadow-none: none;
+  --bp-shadow-sm: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+  --bp-shadow-card: var(--bp-shadow-none);
+
+  /* 图标容器（宫格 / 统计） */
+  --bp-icon-box-size: 88rpx;
+  --bp-icon-box-radius: 20rpx;
+
+  /*
+   * 跨端布局（运行时由 AppPage + utils/layout.ts 注入，此处为 SSR/降级默认值）
+   * App / iOS / Android / H5 / 小程序 共用同一套 CSS 变量名
+   */
+  --bp-status-bar-height: env(safe-area-inset-top, 0px);
+  --bp-nav-content-height: 44px;
+  --bp-nav-total-height: calc(var(--bp-status-bar-height) + var(--bp-nav-content-height));
+  --bp-custom-nav-padding-top: calc(var(--bp-nav-total-height) + 8px);
+  --bp-content-max-width: 100%;
+  --bp-tabbar-height: 50px;
+  --bp-page-bottom: calc(var(--bp-tabbar-height) + env(safe-area-inset-bottom));
+}

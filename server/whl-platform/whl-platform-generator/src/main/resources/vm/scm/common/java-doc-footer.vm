@@ -1,0 +1,6 @@
+ * <p>
+ * 表 {@code ${tableName}}；模板 {@code scm_crud}；标识 {@code scm-gen:${scmGenTag}}。
+ * 重新生成会覆盖本文件；业务逻辑定制请改 {@link ${ClassName}AppService} 或前端页面。
+ *
+ * @author ${author}
+ * @date ${datetime}

@@ -1,0 +1,26 @@
+package ${packageScmAdapter}.controller.vo;
+
+#foreach ($import in $importList)
+import ${import};
+#end
+#parse("vm/scm/common/java-lombok-data.vm")
+
+/**
+ * ${functionName} HTTP 出参（管理端展示）。
+ * <p>
+ * 由 {@code ${ClassName}Dto} 转换，不暴露 Facade 契约类型给前端。
+ *
+#parse("vm/scm/common/java-doc-footer.vm")
+ */
+@Data
+@NoArgsConstructor
+public class ${ClassName}Vo {
+
+#foreach ($column in $columns)
+#if($column.list && !$table.isSuperColumn($column.javaField))
+    /** $column.columnComment */
+    private ${column.javaType} ${column.javaField};
+
+#end
+#end
+}

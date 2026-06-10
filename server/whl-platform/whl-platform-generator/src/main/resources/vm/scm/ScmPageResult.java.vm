@@ -1,0 +1,21 @@
+package ${packageScmApi}.page;
+
+import java.util.List;
+#parse("vm/scm/common/java-lombok-data.vm")
+
+/**
+ * SCM 分页结果（无 Spring 依赖，供 Facade 与 Adapter 转换）。
+ *
+#parse("vm/scm/common/java-doc-footer.vm")
+ */
+@Data
+@NoArgsConstructor
+public class ScmPageResult<T> {
+
+    /** 当前页数据 */
+    private List<T> rows;
+
+    /** 总记录数 */
+    private long total;
+
+}
